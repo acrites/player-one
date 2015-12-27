@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/acrites/AndroidStudioProjects/PlayerOne/app/build/intermediates/incremental-classes/debug/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ded95bdd38582a7ea0eae38955cfaf88b8712532">
+        <dex dex="/Users/acrites/AndroidStudioProjects/PlayerOne/app/build/intermediates/pre-dexed/debug/classes_0749a9790e2bb0e40796a8d5dd7d86739e8bdb9d.jar" />
+    </item>
+
+</items>
