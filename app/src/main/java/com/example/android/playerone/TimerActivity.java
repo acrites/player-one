@@ -12,6 +12,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -56,12 +58,14 @@ public class TimerActivity extends ActionBarActivity {
 
             public void onTick(long millisUntilFinished) {
                 mTimerView.setText("" + millisUntilFinished / 1000);
+                Animation scaleTimerAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.timer_scale);
+                mTimerView.startAnimation(scaleTimerAnimation);
             }
 
             // Stop this activity 5 seconds after the timer runs out.
             public void onFinish() {
                 if (mPlayers.size() > 0) {
-                    mTimerView.setText("Winner!");
+                    mTimerView.setText(getString(R.string.player_one));
                     chooseWinner(mPlayers);
                     // Refresh the drawings for the players.
                     mFinishHandler.post(new Runnable() {
@@ -85,11 +89,11 @@ public class TimerActivity extends ActionBarActivity {
     /**
      * Choose a random player.
      *
-     * @param players
+     * @param players The players currently touching the screen.
      */
     private void chooseWinner(HashMap<Integer, PlayerFinger> players) {
 
-        List<Integer> keys = new ArrayList<Integer>(players.keySet());
+        List<Integer> keys = new ArrayList<>(players.keySet());
 
         if (keys.size() > 0) {
             Random rand = new Random();
@@ -148,8 +152,8 @@ public class TimerActivity extends ActionBarActivity {
         /**
          * Remove the player in the event from the HashMap.
          *
-         * @param players
-         * @param event
+         * @param players The players currently touching the screen.
+         * @param event The event that triggered the remove.
          */
         private void removePlayer(HashMap<Integer, PlayerFinger> players, MotionEvent event) {
             Integer id = event.getPointerId(event.getActionIndex());
@@ -159,8 +163,8 @@ public class TimerActivity extends ActionBarActivity {
         /**
          * Add a new PlayerFingers to the HashMap if they isn't already there.
          *
-         * @param players
-         * @param event
+         * @param players The players currently touching the screen.
+         * @param event The event that triggered the add.
          */
         private void addPlayer(HashMap<Integer, PlayerFinger> players, MotionEvent event) {
             int index = event.getActionIndex();
@@ -173,8 +177,8 @@ public class TimerActivity extends ActionBarActivity {
         /**
          * Update the players position in this event.
          *
-         * @param players
-         * @param event
+         * @param players The players currently touching the screen.
+         * @param event The event that triggered the update.
          */
         private void updatePlayers(HashMap<Integer, PlayerFinger> players, MotionEvent event) {
             for (int index = 0; index < event.getPointerCount(); index++) {
@@ -194,11 +198,11 @@ public class TimerActivity extends ActionBarActivity {
             if (surfaceHolder.getSurface().isValid()) {
                 Canvas canvas = surfaceHolder.lockCanvas();
                 canvas.drawColor(Color.BLACK);
-                for (Integer playerId : mPlayers.keySet()) {
-                    PlayerFinger player = mPlayers.get(playerId);
+                for (Integer playerId : players.keySet()) {
+                    PlayerFinger player = players.get(playerId);
                     if (mWinnerChosen) {
                         // If we have already chosen a winner, only show the winner.
-                        if (playerId == mWinningId) {
+                        if (playerId.equals(mWinningId)) {
                             paint.setColor(Color.WHITE);
                             canvas.drawCircle(player.mXpos, player.mYpos, 85, paint);
                             paint.setColor(player.getmColor());
